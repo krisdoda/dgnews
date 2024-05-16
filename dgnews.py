@@ -4,8 +4,11 @@ import pandas as pd
 import time
 
 def scrape_news(keyword, url):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+    }
     try:
-        response = requests.get(url, timeout=10)  # Set a timeout value
+        response = requests.get(url, headers=headers, timeout=10)  # Set a timeout value
         response.raise_for_status()  # Raise an HTTPError for bad responses
     except requests.exceptions.RequestException as e:
         print(f"Error fetching {url}: {e}")
