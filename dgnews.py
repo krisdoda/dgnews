@@ -72,47 +72,13 @@ websites = [
     {'name': 'albanianpost', 'url': 'https://albanianpost.com'},
 ]
 
-# Function to rotate user agents
-def rotate_user_agent():
-    return choice(USER_AGENTS)
 
-# Function to scrape news
-def scrape_news(keyword, url):
-    try:
-        # Initialize ProxyRequests object
-        proxy = ProxyRequests(url)
-        
-        # Fetch a list of proxies
-        proxy.get_proxies_from_url('https://www.sslproxies.org/')
-        proxy.set_proxy()
-        
-        response = proxy.get(url, timeout=10)
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching {url}: {e}")
-        return pd.DataFrame()
-    
-    soup = BeautifulSoup(response.content, 'html.parser')
-    
-    articles = []
-    for item in soup.find_all('article'):
-        title_element = item.find('h2')
-        link_element = title_element.find('a') if title_element else None
-        if title_element and link_element:
-            title = title_element.text.strip()
-            link = link_element['href']
-            if keyword.lower() in title.lower():
-                articles.append({
-                    'Keyword': keyword,
-                    'Title': title,
-                    'Link': link,
-                })
-    return pd.DataFrame(articles)
-
-# List of keywords to scrape
-keywords = ['Gervalla', 'Gervalles', 'MPJD', 'Donika', 'Schwarz']
-
-# List of websites to scrape
-websites = [
-    {'name': 'nacionale', 'url': 'https://nacionale.com'},
-    {'name': '
+# Scraping loop
+for keyword in keywords:
+    for site in websites:
+        print(f"Scraping {site['name']} for {keyword}")
+        df = scrape_news(keyword, site['url'])
+        if not df.empty:
+            print(df)
+        time.sleep(5)  # Delay between requests to avoid overwhelming the servers
+I've added complete definitions for each website and also defined lists of user agents and proxies for 
