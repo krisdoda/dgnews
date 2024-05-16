@@ -82,13 +82,26 @@ def main():
         {'name': 'albanianpost', 'url': 'https://albanianpost.com'}
     ]
 
+    articles = []  # Store all articles
+
     for site in urls:
         html = scraper.scrape_url(site['url'])
         if html:
-            # Process the HTML content as needed
-            print(f"Fetched content from {site['url']} successfully.")
-        else:
-            print(f"Failed to fetch content from {site['url']}.")
+            # Process the HTML content
+            soup = BeautifulSoup(html, 'html.parser')
+            # Find all the articles on the page
+            article_links = soup.find_all('a', href=True)
+            for link in article_links:
+                article_url = link['href']
+                # Check if the link is a valid article link
+                if article_url.startswith('http'):
+                    # Store the article URL along with the site name
+                    articles.append({'site': site['name'], 'url': article_url})
+
+    # Now you can process the articles list further as needed
+    for article in articles:
+        print(f"Site: {article['site']}, Article URL: {article['url']}")
 
 if __name__ == "__main__":
     main()
+
