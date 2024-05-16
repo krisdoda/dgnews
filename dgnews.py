@@ -54,8 +54,6 @@ websites = [
     {'name': 'tribunaonline', 'url': 'https://tribunaonline.com'},
     {'name': 'epokaere', 'url': 'https://epokaere.com'},
     {'name': 'rtv21', 'url': 'https://rtv21.tv'},
-    {'name': 'botapress', 'url': 'https://botapress.info'},
-    {'name': 'gazetasot', 'url': 'https://gazetasot.com'},
     {'name': 'lajmi', 'url': 'https://lajmi.net'},
     {'name': 'infopress', 'url': 'https://infopress.tv'},
     {'name': 'kosova-sot', 'url': 'https://kosova-sot.info'},
