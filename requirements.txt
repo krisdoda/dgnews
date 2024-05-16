@@ -1,4 +1,5 @@
 proxy_requests
+fake_useragent
 beautifulsoup4
 pandas
 Flask
