@@ -1,4 +1,4 @@
-requests
+proxy_requests
 beautifulsoup4
 pandas
 Flask
