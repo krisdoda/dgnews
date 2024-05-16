@@ -25,6 +25,7 @@ def scrape_news(keyword, url):
 
     # Return the DataFrame
     # return news_data
+    return None  # Placeholder for actual scraping logic
 
 # List of keywords to scrape
 keywords = ['Gervalla', 'Gervalles', 'MPJD', 'Donika', 'Schwarz']
@@ -71,7 +72,8 @@ while True:
     for site in websites:
         for keyword in keywords:
             news_data = scrape_news(keyword, site['url'])
-            all_news = pd.concat([all_news, news_data])
+            if news_data is not None:  # Check if news_data is not empty
+                all_news = pd.concat([all_news, news_data])
 
     # Apply styling to the DataFrame
     styled_table = all_news.style.set_table_styles([

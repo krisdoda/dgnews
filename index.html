@@ -1,17 +1,92 @@
-<style type="text/css">
-#T_ca562 tr:hover {
-  background-color: #ffff99;
-}
-#T_ca562 th {
-  background-color: #f2f2f2;
-}
-#T_ca562 td {
-  border: 1px solid #dddddd;
-}
-</style>
-<table id="T_ca562">
-  <thead>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraped News Links</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style type="text/css">
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+        #table-container {
+            margin: 20px auto;
+            width: 80%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            padding: 15px 0;
+            margin: 0;
+        }
+        .page-item {
+            margin: 0 5px;
+            cursor: pointer;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .page-item:hover {
+            background-color: #ddd;
+        }
+        .page-item.active {
+            background-color: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scraped News Links</h1>
+    <div id="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Title</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Table rows will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+    <ul class="pagination" id="pagination">
+        <!-- Pagination links will be dynamically added here -->
+    </ul>
+
+    <script>
+        // JavaScript code for pagination will be added here
+    </script>
+</body>
+</html>
