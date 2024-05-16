@@ -2,21 +2,21 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import time
+from random import randint
 
 def scrape_news(keyword, url):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
     }
     try:
-        response = requests.get(url, headers=headers, timeout=10)  # Set a timeout value
-        response.raise_for_status()  # Raise an HTTPError for bad responses
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
     except requests.exceptions.RequestException as e:
         print(f"Error fetching {url}: {e}")
-        return pd.DataFrame()  # Return an empty DataFrame on error
-
+        return pd.DataFrame()
+    
     soup = BeautifulSoup(response.content, 'html.parser')
-
-    # Your actual scraping logic here
+    
     articles = []
     for item in soup.find_all('article'):
         title_element = item.find('h2')
@@ -70,8 +70,9 @@ while True:
     for site in websites:
         for keyword in keywords:
             news_data = scrape_news(keyword, site['url'])
-            if not news_data.empty:  # Check if news_data is not empty
+            if not news_data.empty:
                 all_news = pd.concat([all_news, news_data], ignore_index=True)
+            time.sleep(randint(1, 3))  # Adding delay between requests
 
     if not all_news.empty:
         styled_table = all_news.style.set_table_styles([
@@ -86,4 +87,4 @@ while True:
         print("News data updated and saved.")
         print(all_news)
 
-    time.sleep(60)
+    time.sleep(300)  # 5 minutes delay
