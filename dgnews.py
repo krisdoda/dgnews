@@ -74,7 +74,6 @@ def main():
         {'name': 'lajmi', 'url': 'https://lajmi.net'},
         {'name': 'infopress', 'url': 'https://infopress.tv'},
         {'name': 'kosova-sot', 'url': 'https://kosova-sot.info'},
-        {'name': 'kosova24', 'url': 'https://kosova24.info'},
         {'name': 'top-channel', 'url': 'https://top-channel.tv'},
         {'name': 'syri', 'url': 'https://syri.net'},
         {'name': 'lajmi', 'url': 'https://lajmi.net'},
