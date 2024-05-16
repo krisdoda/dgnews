@@ -1,13 +1,17 @@
-import time
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
 
-# Function to scrape news based on keyword
 def scrape_news(keyword, url):
-    # Send request to the website
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+    try:
+        response = requests.get(url, timeout=10)  # Set a timeout value (e.g., 10 seconds)
+        response.raise_for_status()  # Raise an HTTPError for bad responses
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching {url}: {e}")
+        return []
+    soup = BeautifulSoup(response.content, 'html.parser')
+    # Your existing scraping logic here
+    # ...
+    return articles
 
     # Extract relevant information (date, title, link)
     # Example code:
