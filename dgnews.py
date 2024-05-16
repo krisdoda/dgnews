@@ -2,7 +2,35 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import time
+from random import choice
 from proxy_requests import ProxyRequests
+
+# List of user agents
+USER_AGENTS = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0',
+    'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/604.4.7 (KHTML, like Gecko) Version/11.0.3 Safari/604.4.7',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:56.0) Gecko/20100101 Firefox/56.0',
+]
+
+# List of proxies
+PROXIES = [
+    'proxy1.example.com',
+    'proxy2.example.com',
+    'proxy3.example.com',
+    # Add more proxies here
+]
+
+# Function to rotate user agents
+def rotate_user_agent():
+    return choice(USER_AGENTS)
+
+# Function to rotate proxies
+def rotate_proxy():
+    return choice(PROXIES)
 
 # Function to scrape news
 def scrape_news(keyword, url):
@@ -72,7 +100,6 @@ websites = [
     {'name': 'albanianpost', 'url': 'https://albanianpost.com'},
 ]
 
-
 # Scraping loop
 for keyword in keywords:
     for site in websites:
@@ -81,4 +108,3 @@ for keyword in keywords:
         if not df.empty:
             print(df)
         time.sleep(5)  # Delay between requests to avoid overwhelming the servers
-I've added complete definitions for each website and also defined lists of user agents and proxies for 
