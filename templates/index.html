@@ -41,27 +41,14 @@
         tr:hover {
             background-color: #f5f5f5;
         }
-        .pagination {
-            display: flex;
-            justify-content: center;
-            list-style-type: none;
-            padding: 15px 0;
-            margin: 0;
-        }
-        .page-item {
-            margin: 0 5px;
-            cursor: pointer;
-            padding: 10px;
-            background-color: #f2f2f2;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .page-item:hover {
-            background-color: #ddd;
-        }
-        .page-item.active {
-            background-color: #333;
+        .btn {
+            padding: 8px 12px;
+            background-color: #007bff;
             color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -71,22 +58,25 @@
         <table>
             <thead>
                 <tr>
-                    <th>Date & Time</th>
+                    <th>Site</th>
                     <th>Title</th>
-                    <th>Link</th>
+                    <th>Publication Time</th>
+                    <th>Keywords</th>
+                    <th>Action</th>
                 </tr>
             </thead>
-            <tbody id="table-body">
-                <!-- Table rows will be dynamically added here -->
+            <tbody>
+                {% for article in articles %}
+                <tr>
+                    <td>{{ article.site }}</td>
+                    <td>{{ article.title }}</td>
+                    <td>{{ article.time }}</td>
+                    <td>{{ article.keywords }}</td>
+                    <td><a href="{{ article.url }}" target="_blank" class="btn">Read More</a></td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
-    <ul class="pagination" id="pagination">
-        <!-- Pagination links will be dynamically added here -->
-    </ul>
-
-    <script>
-        // JavaScript code for pagination will be added here
-    </script>
 </body>
 </html>

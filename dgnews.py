@@ -1,14 +1,16 @@
-import requests
+from datetime import datetime
+from flask import Flask, render_template
 from bs4 import BeautifulSoup
 import random
-from fake_useragent import UserAgent
+import requests
+
+app = Flask(__name__)
 
 class ProxyRequests:
     def __init__(self):
         self.proxies = []
 
     def fetch_proxies(self):
-        # Fetch proxies from a reliable source
         response = requests.get('https://www.sslproxies.org/')
         soup = BeautifulSoup(response.text, 'html.parser')
         for row in soup.find_all('tr')[1:]:
@@ -18,7 +20,6 @@ class ProxyRequests:
             self.proxies.append(f"{ip}:{port}")
 
     def get_random_proxy(self):
-        # Get a random proxy from the list
         return random.choice(self.proxies) if self.proxies else None
 
 class Scraper:
@@ -33,13 +34,10 @@ class Scraper:
         ]
 
     def scrape_url(self, url):
-        # Fetch a random proxy
         proxy_addr = self.proxy.get_random_proxy()
         proxies = {"http": proxy_addr, "https": proxy_addr} if proxy_addr else None
 
-        # Choose a random user agent
         user_agent = random.choice(self.user_agents)
-
         headers = {'User-Agent': user_agent}
 
         try:
@@ -50,21 +48,20 @@ class Scraper:
             print(f"Error fetching {url}: {e}")
             return None
 
-def main():
+def scrape_articles():
     scraper = Scraper()
+    keywords = ['gervalla', 'gervalles', 'gervallen', 'mpjd']
     urls = [
         {'name': 'nacionale', 'url': 'https://nacionale.com'},
         {'name': 'telegrafi', 'url': 'https://telegrafi.com'},
         {'name': 'indeksonline', 'url': 'https://indeksonline.com'},
         {'name': 'klankosova', 'url': 'https://klankosova.tv'},
-        {'name': 'koha', 'url': 'https://koha.net'},
         {'name': 'gazetaexpress', 'url': 'https://gazetaexpress.com'},
         {'name': 'botasot', 'url': 'https://botasot.info'},
         {'name': 'gazetablic', 'url': 'https://gazetablic.com'},
         {'name': 'insajderi', 'url': 'https://insajderi.com'},
         {'name': 'zeri', 'url': 'https://zeri.info'},
         {'name': 'indeksonline', 'url': 'https://indeksonline.net'},
-        {'name': 'kohavision', 'url': 'https://kohavision.tv'},
         {'name': 'kosovapress', 'url': 'https://kosovapress.com'},
         {'name': 'gazetajnk', 'url': 'https://gazetajnk.com'},
         {'name': 'gazetafjala', 'url': 'https://gazetafjala.com'},
@@ -79,29 +76,36 @@ def main():
         {'name': 'lajmi', 'url': 'https://lajmi.net'},
         {'name': 'gazetablic', 'url': 'https://gazetablic.com'},
         {'name': 'demokracia', 'url': 'https://demokracia.com'},
-        {'name': 'albanianpost', 'url': 'https://albanianpost.com'}
+        {'name': 'albanianpost', 'url': 'https://albanianpost.com'}   
+        # Add more URLs as needed
     ]
 
-    articles = []  # Store all articles
-
+    articles = []
     for site in urls:
         html = scraper.scrape_url(site['url'])
         if html:
-            # Process the HTML content
             soup = BeautifulSoup(html, 'html.parser')
-            # Find all the articles on the page
             article_links = soup.find_all('a', href=True)
             for link in article_links:
                 article_url = link['href']
-                # Check if the link is a valid article link
                 if article_url.startswith('http'):
-                    # Store the article URL along with the site name
-                    articles.append({'site': site['name'], 'url': article_url})
+                    article_html = scraper.scrape_url(article_url)
+                    if article_html:
+                        article_soup = BeautifulSoup(article_html, 'html.parser')
+                        article_title = article_soup.title.text.strip() if article_soup.title else ''
+                        article_time_element = article_soup.find('time', {'datetime': True})
+                        if article_time_element:
+                            article_time = article_time_element['datetime']
+                            if article_time >= '2024-05-17':
+                                article_text = article_soup.get_text().lower()
+                                if any(keyword in article_text for keyword in keywords):
+                                    articles.append({'site': site['name'], 'title': article_title, 'time': article_time, 'keywords': ', '.join(keywords), 'url': article_url})
+    return articles
 
-    # Now you can process the articles list further as needed
-    for article in articles:
-        print(f"Site: {article['site']}, Article URL: {article['url']}")
+@app.route('/dgnews')
+def home():
+    articles = scrape_articles()
+    return render_template('index.html', articles=articles)
 
 if __name__ == "__main__":
-    main()
-
+    app.run(debug=True)
