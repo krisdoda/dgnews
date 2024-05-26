@@ -113,5 +113,10 @@ def home():
     articles = scrape_articles()
     return render_template('index.html', articles=articles)
 
+@app.route('/dgnews')
+def dgnews():
+    articles = scrape_articles()
+    return "This is the DGNews page."
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=3000)
