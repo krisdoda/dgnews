@@ -1,8 +1,13 @@
+import logging
 from datetime import datetime
 from flask import Flask, render_template
 from bs4 import BeautifulSoup
 import random
 import requests
+
+# Set up logging
+logging.basicConfig(filename='/home/krisdoda/dgnews/scraper.log', level=logging.INFO, 
+                    format='%(asctime)s:%(levelname)s:%(message)s')
 
 app = Flask(__name__)
 
@@ -45,7 +50,7 @@ class Scraper:
             response.raise_for_status()
             return response.text
         except requests.exceptions.RequestException as e:
-            print(f"Error fetching {url}: {e}")
+            logging.error(f"Error fetching {url}: {e}")
             return None
 
 def scrape_articles():
@@ -100,6 +105,7 @@ def scrape_articles():
                                 article_text = article_soup.get_text().lower()
                                 if any(keyword in article_text for keyword in keywords):
                                     articles.append({'site': site['name'], 'title': article_title, 'time': article_time, 'keywords': ', '.join(keywords), 'url': article_url})
+    logging.info(f"Scraped {len(articles)} articles")
     return articles
 
 @app.route('/dgnews')
