@@ -6,7 +6,7 @@ import random
 import requests
 
 # Set up logging
-logging.basicConfig(filename='/home/krisdoda/dgnews/scraper.log', level=logging.INFO, 
+logging.basicConfig(filename='/home/krisdoda/dgnews/scraper.log', level=logging.DEBUG, 
                     format='%(asctime)s:%(levelname)s:%(message)s')
 
 app = Flask(__name__)
@@ -16,6 +16,7 @@ class ProxyRequests:
         self.proxies = []
 
     def fetch_proxies(self):
+        logging.debug("Fetching proxies")
         response = requests.get('https://www.sslproxies.org/')
         soup = BeautifulSoup(response.text, 'html.parser')
         for row in soup.find_all('tr')[1:]:
@@ -23,9 +24,12 @@ class ProxyRequests:
             ip = columns[0].get_text()
             port = columns[1].get_text()
             self.proxies.append(f"{ip}:{port}")
+        logging.debug(f"Proxies fetched: {self.proxies}")
 
     def get_random_proxy(self):
-        return random.choice(self.proxies) if self.proxies else None
+        proxy = random.choice(self.proxies) if self.proxies else None
+        logging.debug(f"Using proxy: {proxy}")
+        return proxy
 
 class Scraper:
     def __init__(self):
@@ -41,11 +45,11 @@ class Scraper:
     def scrape_url(self, url):
         proxy_addr = self.proxy.get_random_proxy()
         proxies = {"http": proxy_addr, "https": proxy_addr} if proxy_addr else None
-
         user_agent = random.choice(self.user_agents)
         headers = {'User-Agent': user_agent}
 
         try:
+            logging.info(f"Fetching URL: {url} with proxy: {proxy_addr}")
             response = requests.get(url, headers=headers, proxies=proxies, timeout=10)
             response.raise_for_status()
             return response.text
@@ -54,6 +58,7 @@ class Scraper:
             return None
 
 def scrape_articles():
+    logging.info("Starting article scraping")
     scraper = Scraper()
     keywords = ['gervalla', 'gervalles', 'gervallen', 'mpjd']
     urls = [
@@ -81,12 +86,13 @@ def scrape_articles():
         {'name': 'lajmi', 'url': 'https://lajmi.net'},
         {'name': 'gazetablic', 'url': 'https://gazetablic.com'},
         {'name': 'demokracia', 'url': 'https://demokracia.com'},
-        {'name': 'albanianpost', 'url': 'https://albanianpost.com'}   
+        {'name': 'albanianpost', 'url': 'https://albanianpost.com'}
         # Add more URLs as needed
     ]
 
     articles = []
     for site in urls:
+        logging.debug(f"Scraping site: {site['name']}")
         html = scraper.scrape_url(site['url'])
         if html:
             soup = BeautifulSoup(html, 'html.parser')
@@ -113,10 +119,5 @@ def home():
     articles = scrape_articles()
     return render_template('index.html', articles=articles)
 
-@app.route('/dgnews')
-def dgnews():
-    articles = scrape_articles()
-    return "This is the DGNews page."
-
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=3000)
+    app.run(debug=True, port=3000)
